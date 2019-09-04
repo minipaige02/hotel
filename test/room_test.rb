@@ -20,4 +20,19 @@ describe "Room class" do
       expect(@room.cost_per_night).must_equal 200
     end
   end
+
+  describe "self.all_rooms" do
+    before do
+      @rooms = Hotel::Room.all_rooms(20)
+    end
+
+    it "returns an array of Rooms" do
+      expect(@rooms).must_be_kind_of Array
+      expect(@rooms.length).must_equal 20
+      @rooms.each do |room|
+        expect(room).must_be_kind_of Hotel::Room
+      end
+    end
+  end
+
 end
