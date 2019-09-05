@@ -18,6 +18,10 @@ module Hotel
       end
     end
     
+    def total_nights
+      @check_out - @check_in
+    end
+
     #will check if date is in a date range
   end
 end
