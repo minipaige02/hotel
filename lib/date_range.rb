@@ -22,6 +22,10 @@ module Hotel
       @check_out - @check_in
     end
 
-    #will check if date is in a date range
+    def date_included?(date)
+      date = Date.strptime(date, "%m-%d-%Y")
+      date >= @check_in && date < @check_out ? true : false
+    end
+
   end
 end

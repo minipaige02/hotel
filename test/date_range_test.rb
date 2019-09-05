@@ -53,5 +53,23 @@ describe "DateRange" do
       expect(date_range3.total_nights).must_equal 4
     end
   end
+
+  describe "date_included?" do
+    before do
+      @date_range4 = Hotel::DateRange.new("07-01-2020", "07-07-2020")
+    end
+
+    it "returns true if a given date is included in the date range" do
+      expect(@date_range4.date_included?("07-05-2020")).must_equal true
+    end
+
+    it "returns false if a given date is not included in the date range" do
+      expect(@date_range4.date_included?("05-07-2020")).must_equal false
+    end
+
+    it "returns false if a given date is the same as the check-out date" do
+      expect(@date_range4.date_included?("07-07-2020")).must_equal false
+    end
+  end
 end
 
