@@ -23,6 +23,20 @@ describe "Reservation" do
     end
   end
 
+  describe "total cost" do
+    it "calculates the total cost for a reservation" do
+      test_room = Hotel::Room.new(13)
+      date_range1 = Hotel::DateRange.new("05-01-2020", "05-02-2020")
+      date_range2 = Hotel::DateRange.new("06-10-2020", "06-22-2020")
+    
+      reservation1 = Hotel::Reservation.new(date_range1, test_room)
+      reservation2 = Hotel::Reservation.new(date_range2, test_room)
+      
+      expect(reservation1.total_cost).must_be_kind_of Float
+      expect(reservation1.total_cost).must_be_close_to 200.0, 0.01 
+      expect(reservation2.total_cost).must_be_close_to 2400.0, 0.01
+    end
+  end
 
 
 end

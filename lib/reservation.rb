@@ -1,3 +1,5 @@
+require_relative 'date_range'
+
 module Hotel
   class Reservation
     attr_reader :date_range, :room
@@ -8,9 +10,9 @@ module Hotel
       #@id = 
     end
 
-    #initialize with instance of room, instance of date_range, id, guest name?
-
-    #will calculate a total_cost[]
+    def total_cost
+      (@date_range.total_nights * @room.cost_per_night).to_f
+    end
     
   end
 end
