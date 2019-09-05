@@ -11,7 +11,12 @@ module Hotel
       @reservations = []
     end
 
-    #list of all the rooms
+    def list_all_rooms
+      room_list = @rooms.map do |room|
+        "Room #{room.number}"
+      end.join("\n")
     
+      return room_list
+    end
   end
 end

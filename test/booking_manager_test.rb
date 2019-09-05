@@ -38,4 +38,13 @@ describe "BookingManager" do
       end
     end
   end
+
+  describe "list all rooms" do
+    it "returns a string of room numbers" do
+      booking_manager2 = Hotel::BookingManager.new(2)
+
+      expect(booking_manager2.list_all_rooms).must_be_kind_of String
+      expect(booking_manager2.list_all_rooms).must_equal "Room 1\nRoom 2"
+    end
+  end
 end
