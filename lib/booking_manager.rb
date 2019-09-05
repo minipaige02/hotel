@@ -18,5 +18,17 @@ module Hotel
     
       return room_list
     end
+
+    def find_reservations_by_date(date)
+      found_reservations = @reservations.select do |reservation|
+          reservation.date_range.date_included?(date)
+      end
+
+      if found_reservations.length == 0
+        nil
+      else
+        return found_reservations
+      end 
+    end
   end
 end
