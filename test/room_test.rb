@@ -21,7 +21,7 @@ describe "Room class" do
     end
   end
 
-  describe "self.all_rooms" do
+  describe "all rooms" do
     before do
       @rooms = Hotel::Room.all_rooms(20)
     end
