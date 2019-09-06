@@ -8,7 +8,7 @@ describe "DateRange" do
       @date_range = Hotel::DateRange.new(check_in, check_out)
     end
     
-    it "takes in a check_in date and a check_out date" do
+    it "takes in a check-in date and a check-out date" do
       check_in = "03-02-2020"
       check_out = "03-22-2020"
       date_range2 = Hotel::DateRange.new(check_in, check_out)
@@ -16,7 +16,7 @@ describe "DateRange" do
       expect(date_range2).must_be_instance_of Hotel::DateRange
     end
     
-    it "stores check_in date and check_out date as instances of Date" do
+    it "stores check-in date and check-out date as instances of Date" do
       expect(@date_range.check_in).must_be_instance_of Date
       expect(@date_range.check_out).must_be_instance_of Date
     end
@@ -25,9 +25,13 @@ describe "DateRange" do
       expect(@date_range.check_in.strftime("%m-%d-%Y")).must_equal "04-05-2020"
       expect(@date_range.check_out.strftime("%m-%d-%Y")).must_equal "04-16-2020"
     end
+
+    it "stores an array of the range of dates between check-in and check-out" do
+      expect(@date_range.range.length).must_equal 11
+    end
   end
   
-  describe "valid_range?" do
+  describe "valid range?" do
     it "raises an ArgumentError when check_out date is before check_in date" do
       expect{ Hotel::DateRange.new("03-04-2020", "03-03-2020") }.must_raise ArgumentError
     end
@@ -54,7 +58,7 @@ describe "DateRange" do
     end
   end
 
-  describe "date_included?" do
+  describe "date included?" do
     before do
       @date_range4 = Hotel::DateRange.new("07-01-2020", "07-07-2020")
     end
@@ -69,6 +73,18 @@ describe "DateRange" do
 
     it "returns false if a given date is the same as the check-out date" do
       expect(@date_range4.date_included?("07-07-2020")).must_equal false
+    end
+  end
+
+  describe "create range" do
+    it "returns an array of all the dates between a check-in and check-out date" do
+      date_range5 = Hotel::DateRange.new("07-01-2020", "07-07-2020")
+
+      expect(date_range5.create_range).must_be_kind_of Array
+      expect(date_range5.create_range.length).must_equal 6
+      date_range5.create_range.each do |date|
+        expect(date).must_be_instance_of Date
+      end
     end
   end
 end
