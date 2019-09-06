@@ -85,11 +85,10 @@ describe "BookingManager" do
     end
 
     it "returns nil if no reservations are found" do
-      expect(@booking_manager2.find_reservations_by_date("05-22-2020")).must_equal nil
-      expect(@booking_manager2.find_reservations_by_date("06-22-2020")).must_equal nil
-      expect(@booking_manager2.find_reservations_by_date("05-27-2020")).must_equal nil
+      expect(@booking_manager2.find_reservations_by_date("05-22-2020")).must_be_nil
+      expect(@booking_manager2.find_reservations_by_date("06-22-2020")).must_be_nil
+      expect(@booking_manager2.find_reservations_by_date("05-27-2020")).must_be_nil
     end
-
   end
 
 end
