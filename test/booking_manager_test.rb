@@ -1,5 +1,4 @@
 require_relative 'test_helper'
-require 'pry'
 
 describe "BookingManager" do
   before do
