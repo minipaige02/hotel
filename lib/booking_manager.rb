@@ -1,5 +1,5 @@
 require_relative 'room'
-require_relative 'reservation'
+require_relative 'single_res'
 require_relative 'date_range'
 
 module Hotel
@@ -53,7 +53,7 @@ module Hotel
         raise ArgumentError.new("No available rooms for #{check_in} - #{check_out}")
       else
         room = find_room(available_rooms)
-        reservations << Hotel::Reservation.new(dates, room)
+        reservations << Hotel::SingleRes.new(dates, room)
       end
     end
   end
