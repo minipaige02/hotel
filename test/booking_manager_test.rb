@@ -133,10 +133,45 @@ describe "BookingManager" do
       expect(room_numbers).must_include 3
       expect(room_numbers).must_include 20
     end
-
-    # it "raises an ArgumentError if no rooms are available for the given date range" do
-    
-    # end
   end
 
+  describe "book reservation" do
+    before do
+      @booking_manager3 = Hotel::BookingManager.new(3)
+      reservation1 = Hotel::Reservation.new(
+        Hotel::DateRange.new("09-01-2020", "09-24-2020"), 
+        @booking_manager3.rooms[0])
+      reservation2 = Hotel::Reservation.new(
+        Hotel::DateRange.new("09-01-2020", "09-07-2020"), 
+        @booking_manager3.rooms[1])
+      reservation3 = Hotel::Reservation.new(
+        Hotel::DateRange.new("09-01-2020", "09-07-2020"), 
+        @booking_manager3.rooms[2])
+
+      @booking_manager3.reservations << reservation1
+      @booking_manager3.reservations << reservation2
+      @booking_manager3.reservations << reservation3
+    end
+
+    it "adds the new reservation to BookingManager" do
+      @booking_manager3.book_reservation("09-08-2020", "09-10-2020")
+
+      all_reservations = @booking_manager3.reservations
+
+      expect(all_reservations.length).must_equal 4
+    end
+    
+    it "will not book a room that is not available" do
+      @booking_manager3.book_reservation("09-08-2020", "09-10-2020")
+      
+      expect(@booking_manager3.reservations[3].room.number).wont_equal 1 
+    end
+
+    it "raises an error if no rooms are available for the given date range" do 
+      check_in = "09-02-2020"
+      check_out = "09-10-2020"
+
+      expect{@booking_manager3.book_reservation(check_in, check_out)}.must_raise ArgumentError
+    end
+  end
 end

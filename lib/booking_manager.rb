@@ -32,6 +32,7 @@ module Hotel
     end
 
     def rooms_available(check_in, check_out)
+      #refactor? two different methods are initializing DateRange...
       dates_to_check = Hotel::DateRange.new(check_in, check_out)
 
       reserved_rooms = reservations.select do |reservation|
@@ -42,11 +43,21 @@ module Hotel
 
       return available_rooms
     end
-    
-    
-    
-    #make a reservation for a given date range(initialize date_range)
-    #NO DATE OVERLAP!
-    #raise exception if try to book a room when all rooms are booked
+
+    def find_room(available_rooms)
+      available_rooms[0]
+    end
+
+    def book_reservation(check_in, check_out)
+      dates = Hotel::DateRange.new(check_in, check_out)
+      available_rooms = rooms_available(check_in, check_out)
+      
+      if available_rooms.length == 0
+        raise ArgumentError.new("No available rooms for #{check_in} - #{check_out}")
+      else
+        room = find_room(available_rooms)
+        reservations << Hotel::Reservation.new(dates, room)
+      end
+    end
   end
 end
