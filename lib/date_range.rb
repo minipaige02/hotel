@@ -2,10 +2,10 @@ require 'date'
 
 module Hotel
   class DateRange
-    attr_reader :check_in, :check_out, :range
+    attr_reader :check_in, :check_out
 
     def initialize(check_in, check_out)
-      # refactor so only the range is stored and not the check-in & check-out dates?
+      # refactor so only the range is stored and not the check-in & check-out
       check_in = Date.strptime(check_in, "%m-%d-%Y")
       check_out = Date.strptime(check_out, "%m-%d-%Y")
 
@@ -16,15 +16,7 @@ module Hotel
       else
         @check_in = check_in
         @check_out = check_out
-        @range = create_range
       end
-    end
-    
-    def create_range
-      # check-out date is excluded from the date range since 
-      # check-out time does not result in a conflict for reservations
-      date_range = check_in...check_out
-      date_range_array = date_range.to_a
     end
 
     def total_nights
@@ -36,8 +28,11 @@ module Hotel
       date >= check_in && date < check_out ? true : false
     end
 
-    def overlaps?(other_dates)
-      range[0] <= other_dates.range[-1] && other_dates.range[0] <= range[-1]
+    def overlaps?(start_date, end_date)
+      start_date = Date.strptime(start_date, "%m-%d-%Y")
+      end_date = Date.strptime(end_date, "%m-%d-%Y")
+
+      check_in <= (end_date - 1) && start_date <= (check_out - 1)
     end
 
   end

@@ -31,12 +31,9 @@ module Hotel
       end 
     end
 
-    def rooms_available(check_in, check_out)
-      #refactor? two different methods are initializing DateRange...
-      dates_to_check = Hotel::DateRange.new(check_in, check_out)
-
+    def rooms_available(start_date, end_date)
       reserved_rooms = reservations.select do |reservation|
-        reservation.date_range.overlaps?(dates_to_check)
+        reservation.date_range.overlaps?(start_date, end_date)
       end.map {|reservation| reservation.room}
 
       available_rooms = rooms - reserved_rooms
