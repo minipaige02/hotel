@@ -1,4 +1,5 @@
 require_relative 'test_helper'
+require 'pry'
 
 describe "BookingManager" do
   before do
@@ -89,6 +90,53 @@ describe "BookingManager" do
       expect(@booking_manager2.find_reservations_by_date("06-22-2020")).must_be_nil
       expect(@booking_manager2.find_reservations_by_date("05-27-2020")).must_be_nil
     end
+  end
+
+  describe "rooms available" do
+    before do
+      reservation1 = Hotel::Reservation.new(
+        Hotel::DateRange.new("05-22-2020", "05-24-2020"), 
+        @booking_manager.rooms[0]) #this is room 1
+      reservation2 = Hotel::Reservation.new(
+        Hotel::DateRange.new("05-22-2020", "05-24-2020"), 
+        @booking_manager.rooms[1]) #this is room 2
+      reservation3 = Hotel::Reservation.new(
+        Hotel::DateRange.new("05-25-2020", "05-27-2020"), 
+        @booking_manager.rooms[2]) #this is room 3
+      
+      @booking_manager.reservations << reservation1
+      @booking_manager.reservations << reservation2
+      @booking_manager.reservations << reservation3
+    end
+
+    it "returns an array of available rooms for a given date range" do
+      check_in = "05-23-2020"
+      check_out = "05-25-2020"
+
+      availability = @booking_manager.rooms_available(check_in, check_out)
+      
+      expect(availability.length).must_equal 18
+      availability.each do |room|
+        expect(room).must_be_instance_of Hotel::Room
+      end
+    end
+
+    it "returns an accurate list of available rooms" do
+      check_in = "05-23-2020"
+      check_out = "05-25-2020"
+
+      availability = @booking_manager.rooms_available(check_in, check_out)
+      room_numbers = availability.map {|room| room.number}
+
+      expect(room_numbers).wont_include 1
+      expect(room_numbers).wont_include 2
+      expect(room_numbers).must_include 3
+      expect(room_numbers).must_include 20
+    end
+
+    # it "raises an ArgumentError if no rooms are available for the given date range" do
+    
+    # end
   end
 
 end
