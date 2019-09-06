@@ -5,6 +5,7 @@ module Hotel
     attr_reader :check_in, :check_out, :range
 
     def initialize(check_in, check_out)
+      # refactor so only the range is stored and not the check-in & check-out dates?
       check_in = Date.strptime(check_in, "%m-%d-%Y")
       check_out = Date.strptime(check_out, "%m-%d-%Y")
 
@@ -19,6 +20,13 @@ module Hotel
       end
     end
     
+    def create_range
+      # check-out date is excluded from the date range since 
+      # check-out time does not result in a conflict for reservations
+      date_range = check_in...check_out
+      date_range_array = date_range.to_a
+    end
+
     def total_nights
       check_out - check_in
     end
@@ -28,18 +36,9 @@ module Hotel
       date >= check_in && date < check_out ? true : false
     end
 
-    def create_range
-      # check-out date is excluded from the date range since 
-      # check-out time does not result in a conflict for reservations
-      date_range = check_in...check_out
-      date_range_array = date_range.to_a
+    def overlaps?(other_dates)
+      range[0] <= other_dates.range[-1] && other_dates.range[0] <= range[-1]
     end
-
-    # def date_conflict?(date_range1, date_range2)
-    # turn dates into range using total nights
-    # compare both arrays to see if there's overlap
-    # return true or false
-    # end
 
   end
 end

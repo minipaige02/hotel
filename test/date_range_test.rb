@@ -87,5 +87,29 @@ describe "DateRange" do
       end
     end
   end
+
+  describe "overlaps?" do
+    before do
+      @range1 = Hotel::DateRange.new("08-01-2020", "08-05-2020")
+      @range2 = Hotel::DateRange.new("07-31-2020", "08-02-2020")
+      @range3 = Hotel::DateRange.new("08-05-2020", "08-08-2020")
+    end
+
+    it "returns true if two date ranges overlap" do
+      expect(@range1.overlaps?(@range2)).must_equal true
+      expect(@range2.overlaps?(@range1)).must_equal true
+    end
+
+    it "returns false if two date ranges do not overlap" do
+      expect(@range2.overlaps?(@range3)).must_equal false
+      expect(@range3.overlaps?(@range2)).must_equal false
+    end
+
+    it "returns false if a date range's check-out date is the same as another range's check-in date" do
+      expect(@range1.overlaps?(@range3)).must_equal false
+      expect(@range3.overlaps?(@range1)).must_equal false
+    end
+  
+  end
 end
 
