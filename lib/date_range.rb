@@ -5,7 +5,6 @@ module Hotel
     attr_reader :check_in, :check_out
 
     def initialize(check_in, check_out)
-      # refactor so only the range is stored and not the check-in & check-out
       check_in = Date.strptime(check_in, "%m-%d-%Y")
       check_out = Date.strptime(check_out, "%m-%d-%Y")
 
