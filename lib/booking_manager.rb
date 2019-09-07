@@ -45,7 +45,7 @@ module Hotel
       available_rooms[0]
     end
 
-    def book_reservation(check_in, check_out)
+    def book_single_res(check_in, check_out)
       dates = Hotel::DateRange.new(check_in, check_out)
       available_rooms = rooms_available(check_in, check_out)
       
@@ -56,5 +56,7 @@ module Hotel
         reservations << Hotel::SingleRes.new(dates, room)
       end
     end
+
+    #method for booking a BlockRes
   end
 end

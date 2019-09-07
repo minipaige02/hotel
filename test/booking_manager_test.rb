@@ -153,7 +153,7 @@ describe "BookingManager" do
     end
 
     it "adds the new reservation to BookingManager" do
-      @booking_manager3.book_reservation("09-08-2020", "09-10-2020")
+      @booking_manager3.book_single_res("09-08-2020", "09-10-2020")
 
       all_reservations = @booking_manager3.reservations
 
@@ -161,7 +161,7 @@ describe "BookingManager" do
     end
     
     it "will not book a room that is not available" do
-      @booking_manager3.book_reservation("09-08-2020", "09-10-2020")
+      @booking_manager3.book_single_res("09-08-2020", "09-10-2020")
       
       expect(@booking_manager3.reservations[3].room.number).wont_equal 1 
     end
@@ -170,7 +170,7 @@ describe "BookingManager" do
       check_in = "09-02-2020"
       check_out = "09-10-2020"
 
-      expect{@booking_manager3.book_reservation(check_in, check_out)}.must_raise ArgumentError
+      expect{@booking_manager3.book_single_res(check_in, check_out)}.must_raise ArgumentError
     end
   end
 end
