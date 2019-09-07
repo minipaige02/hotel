@@ -1,7 +1,16 @@
 module Hotel
-  class Block < Reservation
-    #initialize needs to take in DateRange, Rooms, discounted room rate(%?)
+  class BlockRes < Reservation
+    attr_reader :rooms, :discount, :group
+    attr_accessor :unbooked_rooms
 
+    def initialize(date_range:, rooms:, discount:, group:)
+      super(date_range)
+      @rooms = rooms
+      @discount = discount
+      @group = group
+      @unbooked_rooms = rooms
+      #generates list of reservations to add to booking manager?
+    end
     #should hold a list of reservations?
     #should hold a group name?
 
@@ -13,4 +22,6 @@ module Hotel
   
 
   end
+
+  #method to find which books are reserved?
 end

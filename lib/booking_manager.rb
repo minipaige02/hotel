@@ -1,5 +1,6 @@
 require_relative 'room'
 require_relative 'single_res'
+require_relative 'block_res'
 require_relative 'date_range'
 
 module Hotel
@@ -34,8 +35,15 @@ module Hotel
     def rooms_available(start_date, end_date)
       reserved_rooms = reservations.select do |reservation|
         reservation.date_range.overlaps?(start_date, end_date)
-      end.map {|reservation| reservation.room}
+      end.map! do |reservation| 
+        if reservation.class == Hotel::SingleRes
+          reservation.room
+        elsif reservation.class == Hotel::BlockRes
+          reservation.rooms
+        end
+      end
 
+      reserved_rooms.flatten!
       available_rooms = rooms - reserved_rooms
 
       return available_rooms
@@ -65,24 +73,22 @@ module Hotel
       end
     end
 
-    # def book_block_res(check_in:, check_out:, total_rooms:, group:, discount:)
-    #   # raises error if try to set aside more than 5 rooms
-    #   if total_rooms > 5
-    #     raise ArgumentError.new("Total rooms in block cannot exceed 5 rooms.")
-    #   end
+    def create_block_res(check_in:, check_out:, total_rooms:, group:, discount:)
+      # raises error if try to set aside more than 5 rooms
+      if total_rooms > 5
+        raise ArgumentError.new("Total rooms in block cannot exceed 5 rooms.")
+      end
 
-    #   available_rooms = rooms_available(check_in, check_out)
-    #   dates = Hotel::DateRange.new(check_in, check_out)
+      available_rooms = rooms_available(check_in, check_out)
+      dates = Hotel::DateRange.new(check_in, check_out)
 
-    #   if available_rooms.length < total_rooms
-    #     raise ArgumentError.new("Insufficient rooms available for #{check_in} - #{check_out}.")
-    #   else
-    #     rooms = []
-    #     total_rooms.times do 
-    #       rooms << find_room(available_rooms)
-    #     end
-      
+      if available_rooms.length < total_rooms
+        raise ArgumentError.new("Insufficient rooms available for #{check_in} - #{check_out}.")
+      else
+        rooms = find_rooms(available_rooms)
+        reservations << Hotel::BlockRes.new(date_range: dates, rooms: rooms, discount: discount, group: group)
+      end
+    end
 
-    # end
   end
 end

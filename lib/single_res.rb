@@ -7,7 +7,6 @@ module Hotel
     def initialize(date_range, room)
       super(date_range)
       @room = room
-      #@id = 
     end
 
     def total_cost

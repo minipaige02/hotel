@@ -89,6 +89,17 @@ describe "BookingManager" do
       expect(@booking_manager2.find_reservations_by_date("06-22-2020")).must_be_nil
       expect(@booking_manager2.find_reservations_by_date("05-27-2020")).must_be_nil
     end
+
+    it "returns both single reservations and blocks" do
+      rooms = [@booking_manager2.rooms[1], @booking_manager2.rooms[3]]
+      block_res = Hotel::BlockRes.new(date_range: Hotel::DateRange.new("05-23-2020", "05-25-2020"), rooms: rooms, discount: 0.15, group: "SAA")
+      @booking_manager2.reservations << block_res
+
+      found_reservations = @booking_manager2.find_reservations_by_date("05-24-2020")
+
+      expect(found_reservations.length).must_equal 3
+      expect(found_reservations[2]).must_be_instance_of Hotel::BlockRes
+    end
   end
 
   describe "rooms available" do
@@ -102,10 +113,23 @@ describe "BookingManager" do
       reservation3 = Hotel::SingleRes.new(
         Hotel::DateRange.new("05-25-2020", "05-27-2020"), 
         @booking_manager.rooms[2]) #this is room 3
+      block_res = Hotel::BlockRes.new(
+        date_range: Hotel::DateRange.new("06-03-2020", "06-05-2020"), 
+        rooms: [ #rooms 3-7
+          @booking_manager.rooms[2], 
+          @booking_manager.rooms[3], 
+          @booking_manager.rooms[4],
+          @booking_manager.rooms[5],
+          @booking_manager.rooms[6]
+          ],
+        discount: 0.15,
+        group: "SAA"
+      )
       
       @booking_manager.reservations << reservation1
       @booking_manager.reservations << reservation2
       @booking_manager.reservations << reservation3
+      @booking_manager.reservations << block_res
     end
 
     it "returns an array of available rooms for a given date range" do
@@ -131,6 +155,14 @@ describe "BookingManager" do
       expect(room_numbers).wont_include 2
       expect(room_numbers).must_include 3
       expect(room_numbers).must_include 20
+    end
+
+    it "does not include rooms set aside for a block" do
+      availability = @booking_manager.rooms_available("06-04-2020", "06-07-2020")
+      room_numbers = availability.map {|room| room.number}
+
+      expect(availability.length).must_equal 15
+      expect(room_numbers).wont_include 5
     end
   end
 
@@ -173,4 +205,16 @@ describe "BookingManager" do
       expect{@booking_manager3.book_single_res(check_in, check_out)}.must_raise ArgumentError
     end
   end
+
+  describe "create block reservation" do
+    before do
+      @booking_manager = Hotel::BookingManager.new(5)
+    end 
+    it "Adds an instance of BlockRes to the booking manager's list of reservations" do
+      new_block = @booking_manager.create_block_res(check_in: "08-01-2020", check_out: "08-04-2020", total_rooms: 3, group: "SAA", discount: 0.15)
+
+      expect(@booking_manager.reservations.length).must_equal 1
+    end
+  end
+
 end
