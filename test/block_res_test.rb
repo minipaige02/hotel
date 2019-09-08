@@ -12,7 +12,7 @@ describe "BlockRes" do
       discount = 0.15
       group = "Davenport"
 
-      new_block = Hotel::BlockRes.new(date_range: date_range, rooms: rooms, discount: discount, group: group)
+      new_block = Hotel::BlockRes.new(date_range: date_range, rooms: rooms, discount: discount, group_name: group)
 
       expect(new_block).must_be_instance_of Hotel::BlockRes
     end
@@ -23,7 +23,7 @@ describe "BlockRes" do
       discount = 0.15
       group = "Davenport"
 
-      new_block = Hotel::BlockRes.new(date_range: date_range, rooms: rooms, discount: discount, group: group)
+      new_block = Hotel::BlockRes.new(date_range: date_range, rooms: rooms, discount: discount, group_name: group)
 
       room_numbers = new_block.rooms.map {|room| room.number}
 

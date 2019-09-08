@@ -1,27 +1,20 @@
 module Hotel
   class BlockRes < Reservation
-    attr_reader :rooms, :discount, :group
-    attr_accessor :unbooked_rooms
+    attr_reader :rooms, :discount, :group_name, :unreserved_rooms
 
-    def initialize(date_range:, rooms:, discount:, group:)
+    def initialize(date_range:, rooms:, discount:, group_name:)
       super(date_range)
       @rooms = rooms
+      @unreserved_rooms = rooms
       @discount = discount
-      @group = group
-      @unbooked_rooms = rooms
-      #generates list of reservations to add to booking manager?
+      @group_name = group_name
     end
-    #should hold a list of reservations?
-    #should hold a group name?
 
     #needs to know if rooms has been booked or not
-
-
-    #make factory of reservation
-    #then single and block child classes
-  
-
+    #check calculation
+    def cost(room)
+      #room must be included in @rooms
+      # super: (date_range.total_nights * room.cost_per_night).to_f * discount
+    end
   end
-
-  #method to find which books are reserved?
 end

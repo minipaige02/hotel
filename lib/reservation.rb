@@ -9,7 +9,7 @@ module Hotel
       #@id = 
     end
 
-    def total_cost
+    def cost
       raise NotImplementedError
     end
   end

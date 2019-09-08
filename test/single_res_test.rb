@@ -32,9 +32,9 @@ describe "SingleRes" do
       reservation1 = Hotel::SingleRes.new(date_range1, test_room)
       reservation2 = Hotel::SingleRes.new(date_range2, test_room)
       
-      expect(reservation1.total_cost).must_be_kind_of Float
-      expect(reservation1.total_cost).must_be_close_to 200.0, 0.01 
-      expect(reservation2.total_cost).must_be_close_to 2400.0, 0.01
+      expect(reservation1.cost).must_be_kind_of Float
+      expect(reservation1.cost).must_be_close_to 200.0, 0.01 
+      expect(reservation2.cost).must_be_close_to 2400.0, 0.01
     end
   end
 

@@ -92,7 +92,7 @@ describe "BookingManager" do
 
     it "returns both single reservations and blocks" do
       rooms = [@booking_manager2.rooms[1], @booking_manager2.rooms[3]]
-      block_res = Hotel::BlockRes.new(date_range: Hotel::DateRange.new("05-23-2020", "05-25-2020"), rooms: rooms, discount: 0.15, group: "SAA")
+      block_res = Hotel::BlockRes.new(date_range: Hotel::DateRange.new("05-23-2020", "05-25-2020"), rooms: rooms, discount: 0.15, group_name: "SAA")
       @booking_manager2.reservations << block_res
 
       found_reservations = @booking_manager2.find_reservations_by_date("05-24-2020")
@@ -123,13 +123,13 @@ describe "BookingManager" do
           @booking_manager.rooms[6]
           ],
         discount: 0.15,
-        group: "SAA"
+        group_name: "SAA"
       )
       
       @booking_manager.reservations << reservation1
       @booking_manager.reservations << reservation2
       @booking_manager.reservations << reservation3
-      @booking_manager.reservations << block_res
+      @booking_manager.blocks << block_res
     end
 
     it "returns an array of available rooms for a given date range" do
@@ -160,7 +160,7 @@ describe "BookingManager" do
     it "does not include rooms set aside for a block" do
       availability = @booking_manager.rooms_available("06-04-2020", "06-07-2020")
       room_numbers = availability.map {|room| room.number}
-
+      
       expect(availability.length).must_equal 15
       expect(room_numbers).wont_include 5
     end
@@ -210,10 +210,10 @@ describe "BookingManager" do
     before do
       @booking_manager = Hotel::BookingManager.new(5)
     end 
-    it "Adds an instance of BlockRes to the booking manager's list of reservations" do
-      new_block = @booking_manager.create_block_res(check_in: "08-01-2020", check_out: "08-04-2020", total_rooms: 3, group: "SAA", discount: 0.15)
+    it "Adds an instance of BlockRes to the booking manager's list of blocks" do
+      new_block = @booking_manager.create_block(check_in: "08-01-2020", check_out: "08-04-2020", total_rooms: 3, group_name: "SAA", discount: 0.15)
 
-      expect(@booking_manager.reservations.length).must_equal 1
+      expect(@booking_manager.blocks.length).must_equal 1
     end
   end
 

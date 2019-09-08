@@ -5,11 +5,12 @@ require_relative 'date_range'
 
 module Hotel
   class BookingManager
-    attr_reader :rooms, :reservations
+    attr_reader :rooms, :reservations, :blocks
     
     def initialize(total_room_count)
       @rooms = Hotel::Room.all_rooms(total_room_count)
       @reservations = []
+      @blocks = []
     end
     
     def list_all_rooms
@@ -21,9 +22,15 @@ module Hotel
     end
     
     def find_reservations_by_date(date)
-      found_reservations = @reservations.select do |reservation|
+      found_singles = reservations.select do |reservation|
         reservation.date_range.date_included?(date)
       end
+
+      found_blocks = blocks.select do |block|
+        block.date_range.date_included?(date)
+      end
+
+      found_reservations = found_singles + found_blocks
       
       if found_reservations.length == 0
         nil
@@ -33,18 +40,25 @@ module Hotel
     end
 
     def rooms_available(start_date, end_date)
-      reserved_rooms = reservations.select do |reservation|
+      reserved_single = reservations.select do |reservation|
         reservation.date_range.overlaps?(start_date, end_date)
-      end.map! do |reservation| 
-        if reservation.class == Hotel::SingleRes
-          reservation.room
-        elsif reservation.class == Hotel::BlockRes
-          reservation.rooms
-        end
-      end
+      end.map! {|reservation| reservation.room}
 
-      reserved_rooms.flatten!
-      available_rooms = rooms - reserved_rooms
+      reserved_blocks = blocks.select do |block|
+        block.date_range.overlaps?(start_date, end_date)
+      end.map! {|block| block.unreserved_rooms}
+
+      if reserved_single.length > 0 && reserved_blocks.length > 0
+        all_reserved = reserved_single + reserved_blocks.flatten!
+      elsif reserved_single.length > 0 && reserved_blocks.length == 0
+        all_reserved = reserved_single
+      elsif reserved_single.length == 0 && reserved_blocks.length > 0
+        all_reserved = reserved_blocks.flatten!
+      else
+        all_reserved = []
+      end
+      
+      available_rooms = rooms - all_reserved
 
       return available_rooms
     end
@@ -73,7 +87,7 @@ module Hotel
       end
     end
 
-    def create_block_res(check_in:, check_out:, total_rooms:, group:, discount:)
+    def create_block(check_in:, check_out:, total_rooms:, group_name:, discount:)
       # raises error if try to set aside more than 5 rooms
       if total_rooms > 5
         raise ArgumentError.new("Total rooms in block cannot exceed 5 rooms.")
@@ -85,10 +99,13 @@ module Hotel
       if available_rooms.length < total_rooms
         raise ArgumentError.new("Insufficient rooms available for #{check_in} - #{check_out}.")
       else
-        rooms = find_rooms(available_rooms)
-        reservations << Hotel::BlockRes.new(date_range: dates, rooms: rooms, discount: discount, group: group)
+        rooms = find_rooms(available_rooms, total_rooms)
+        blocks << Hotel::BlockRes.new(date_range: dates, rooms: rooms, discount: discount, group_name: group_name)
       end
     end
+
+    #book_block_res
+    #check if any rooms available from block
 
   end
 end
