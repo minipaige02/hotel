@@ -1,15 +1,19 @@
 module Hotel
   class BlockRes < Reservation
-    attr_reader :rooms, :discount, :group_name, :unreserved_rooms
+    attr_reader :rooms, :discount, :group_name
+    attr_accessor :unreserved_rooms
 
     def initialize(date_range:, rooms:, discount:, group_name:)
       super(date_range)
       @rooms = rooms
-      @unreserved_rooms = rooms
+      @unreserved_rooms = rooms.dup
       @discount = discount
       @group_name = group_name
     end
 
+    def rooms_available?
+      unreserved_rooms.length > 0 ? true : false
+    end
     #needs to know if rooms has been booked or not
     #check calculation
     def cost(room)

@@ -35,4 +35,34 @@ describe "BlockRes" do
     end
   end
 
+  describe "rooms available?" do
+    before do
+      @block = Hotel::BlockRes.new(
+        date_range: Hotel::DateRange.new("07-17-2020", "07-24-2020"),
+        rooms: [
+          @booking_manager.rooms[0], 
+          @booking_manager.rooms[1], 
+          @booking_manager.rooms[2], 
+          @booking_manager.rooms[4]
+         ],
+        discount: 0.10, 
+        group_name: "SAA"
+      )
+    end
+
+    it "returns true if block has rooms that have not been booked" do
+      @block.unreserved_rooms.delete(@booking_manager.rooms[0])
+
+      expect(@block.unreserved_rooms.length).must_equal 3
+      expect(@block.rooms_available?).must_equal true
+    end
+
+    it "returns false if all the rooms have been booked" do
+      @block.unreserved_rooms.clear
+
+      expect(@block.rooms_available?).must_equal false
+      expect(@block.rooms.length).must_equal 4
+    end
+  end
+
 end
