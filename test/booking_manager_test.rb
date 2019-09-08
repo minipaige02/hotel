@@ -210,11 +210,60 @@ describe "BookingManager" do
     before do
       @booking_manager = Hotel::BookingManager.new(5)
     end 
-    it "Adds an instance of BlockRes to the booking manager's list of blocks" do
+
+    it "adds an instance of BlockRes to the booking manager's list of blocks" do
       new_block = @booking_manager.create_block(check_in: "08-01-2020", check_out: "08-04-2020", total_rooms: 3, group_name: "SAA", discount: 0.15)
 
       expect(@booking_manager.blocks.length).must_equal 1
     end
+
+    it "raises an exception if the total rooms requested exceeds the number of available rooms" do
+      @booking_manager.book_single_res("06-05-2020", "06-10-2020")
+
+      expect{@booking_manager.create_block(
+        check_in: "06-09-2020",
+        check_out: "06-12-2020",
+        total_rooms: 5,
+        group_name: "SAA",
+        discount: 0.10
+      )}.must_raise ArgumentError
+    end
+
+    it "raises an exception if the total rooms requested exceeds 5" do
+      expect{@booking_manager.create_block(
+        check_in: "06-09-2020",
+        check_out: "06-12-2020",
+        total_rooms: 6,
+        group_name: "SAA",
+        discount: 0.10
+      )}.must_raise ArgumentError
+    end
+
+    it "cannot create a block with a room that's part of another block" do
+      @booking_manager.create_block(
+        check_in: "07-01-2020",
+        check_out: "07-03-2020",
+        total_rooms: 3,
+        group_name: "SAA",
+        discount: 0.10
+      )
+      @booking_manager.create_block(
+        check_in: "07-01-2020",
+        check_out: "07-03-2020",
+        total_rooms: 2,
+        group_name: "SCA",
+        discount: 0.10
+      )
+
+      block1_rooms = @booking_manager.blocks[0].rooms.map! {|room|
+        room.number}
+      block2_rooms = @booking_manager.blocks[1].rooms.map! {|room|
+        room.number}
+
+      expect(block1_rooms).wont_include block2_rooms[0]
+      expect(block1_rooms).wont_include block2_rooms[1]
+    end
   end
 
+  
 end
