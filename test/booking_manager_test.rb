@@ -166,7 +166,7 @@ describe "BookingManager" do
     end
   end
 
-  describe "book reservation" do
+  describe "book single reservation" do
     before do
       @booking_manager3 = Hotel::BookingManager.new(3)
       reservation1 = Hotel::SingleRes.new(
@@ -203,6 +203,18 @@ describe "BookingManager" do
       check_out = "09-10-2020"
 
       expect{@booking_manager3.book_single_res(check_in, check_out)}.must_raise ArgumentError
+    end
+
+    it "won't allow reservation to be made for a room reserved for a hotel block" do
+      @booking_manager3.create_block(
+        check_in: "10-08-2020", 
+        check_out: "10-10-2020", 
+        total_rooms: 3, 
+        group_name: "Davenport", 
+        discount: 0.10
+      )
+
+      expect{@booking_manager3.book_single_res("10-09-2020", "10-11-2020")}.must_raise ArgumentError
     end
   end
 
