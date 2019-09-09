@@ -65,4 +65,21 @@ describe "BlockRes" do
     end
   end
 
+  describe "cost" do
+    it "accurately calculates the cost of a room for a block" do
+      @booking_manager.create_block(
+        check_in: "10-10-2020", 
+        check_out: "10-15-2020", 
+        total_rooms: 3, 
+        group_name: "Ramoz", 
+        discount: 0.10
+      )
+      block_res = @booking_manager.blocks[0]
+      room = block_res.rooms[0]
+
+      total_cost = block_res.cost(room)
+
+      expect(total_cost).must_be_close_to 900, 0.01
+    end
+  end
 end

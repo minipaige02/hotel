@@ -92,8 +92,12 @@ describe "BookingManager" do
 
     it "returns both single reservations and blocks" do
       rooms = [@booking_manager2.rooms[1], @booking_manager2.rooms[3]]
-      block_res = Hotel::BlockRes.new(date_range: Hotel::DateRange.new("05-23-2020", "05-25-2020"), rooms: rooms, discount: 0.15, group_name: "SAA")
-      @booking_manager2.reservations << block_res
+      block_res = Hotel::BlockRes.new(
+        date_range: Hotel::DateRange.new("05-23-2020", "05-25-2020"), rooms: rooms, 
+        discount: 0.15, 
+        group_name: "SAA"
+      )
+      @booking_manager2.blocks << block_res
 
       found_reservations = @booking_manager2.find_reservations_by_date("05-24-2020")
 
@@ -113,6 +117,9 @@ describe "BookingManager" do
       reservation3 = Hotel::SingleRes.new(
         Hotel::DateRange.new("05-25-2020", "05-27-2020"), 
         @booking_manager.rooms[2]) #this is room 3
+      reservation4 = Hotel::SingleRes.new(
+        Hotel::DateRange.new("06-03-2020", "06-05-2020"), 
+        @booking_manager.rooms[7]) #this is room 8
       block_res = Hotel::BlockRes.new(
         date_range: Hotel::DateRange.new("06-03-2020", "06-05-2020"), 
         rooms: [ #rooms 3-7
@@ -129,6 +136,7 @@ describe "BookingManager" do
       @booking_manager.reservations << reservation1
       @booking_manager.reservations << reservation2
       @booking_manager.reservations << reservation3
+      @booking_manager.reservations << reservation4
       @booking_manager.blocks << block_res
     end
 
@@ -161,8 +169,9 @@ describe "BookingManager" do
       availability = @booking_manager.rooms_available("06-04-2020", "06-07-2020")
       room_numbers = availability.map {|room| room.number}
       
-      expect(availability.length).must_equal 15
+      expect(availability.length).must_equal 14
       expect(room_numbers).wont_include 5
+      expect(room_numbers).wont_include 8
     end
   end
 
@@ -277,5 +286,60 @@ describe "BookingManager" do
     end
   end
 
-  
+  describe "find block" do
+    before do
+      @booking_manager.create_block(
+        check_in: "10-10-2020", 
+        check_out: "10-15-2020", 
+        total_rooms: 3, 
+        group_name: "Ramoz", 
+        discount: 0.10
+      )
+    end
+
+    it "can find a block given a group name" do
+      found_block = @booking_manager.find_block("Ramoz")
+
+      expect(found_block).must_equal @booking_manager.blocks[0]
+    end
+
+    it "returns nil if no blocks found" do
+      found_block = @booking_manager.find_block("SAA")
+
+      expect(found_block).must_be_nil
+    end
+  end
+
+  describe "book block res" do
+    before do 
+      @booking_manager.create_block(
+        check_in: "10-10-2020", 
+        check_out: "10-15-2020", 
+        total_rooms: 3, 
+        group_name: "Ramoz", 
+        discount: 0.10
+      )
+
+      @block_res = @booking_manager.blocks[0]
+    end
+
+    it "shortens the block's number of unreserved rooms by 1" do
+      @booking_manager.book_block_res("Ramoz")
+      unreserved_room_nums = @block_res.unreserved_rooms.map {|room| room.number}
+      
+      expect(@booking_manager.blocks.length).must_equal 1
+      expect(@block_res.unreserved_rooms.length).must_equal 2
+      expect(@block_res.rooms.length).must_equal 3
+      expect(unreserved_room_nums).wont_include 1
+      expect(unreserved_room_nums).must_include 2 && 3
+    end
+
+    it "raises an exception if no rooms are available from the block" do
+      3.times do 
+        @booking_manager.book_block_res("Ramoz")
+      end
+
+      expect{@booking_manager.book_block_res("Ramoz")}.must_raise ArgumentError
+    end
+  end
 end

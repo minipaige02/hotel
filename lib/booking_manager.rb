@@ -67,11 +67,11 @@ module Hotel
       if total_rooms == 1
         return available_rooms[0]
       else
-        rooms = []
+        rooms_array = []
         total_rooms.times do
-          rooms << available_rooms.shift
+          rooms_array << available_rooms.shift
         end
-        return rooms
+        return rooms_array
       end
     end
 
@@ -88,7 +88,6 @@ module Hotel
     end
 
     def create_block(check_in:, check_out:, total_rooms:, group_name:, discount:)
-      # raises error if try to set aside more than 5 rooms
       if total_rooms > 5
         raise ArgumentError.new("Total rooms in block cannot exceed 5 rooms.")
       end
@@ -104,8 +103,23 @@ module Hotel
       end
     end
 
-    #book_block_res
-    #check if any rooms available from block
+    def find_block(group_name)
+      blocks.each do |block|
+        if block.group_name == group_name
+          return block
+        end
+      end
+      return nil
+    end
 
+    def book_block_res(group_name)
+      block = find_block(group_name)
+
+      if block.rooms_available?
+        block.unreserved_rooms.delete_at(0)
+      else
+        raise ArgumentError.new("No rooms availalbe.")
+      end
+    end
   end
 end

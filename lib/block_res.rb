@@ -14,11 +14,12 @@ module Hotel
     def rooms_available?
       unreserved_rooms.length > 0 ? true : false
     end
-    #needs to know if rooms has been booked or not
-    #check calculation
+
     def cost(room)
-      #room must be included in @rooms
-      # super: (date_range.total_nights * room.cost_per_night).to_f * discount
+      if !rooms.include?(room)
+        raise ArgumentError.new("Invalid room entered.")
+      end
+      return (date_range.total_nights * room.cost_per_night).to_f * (1 - discount)
     end
   end
 end
