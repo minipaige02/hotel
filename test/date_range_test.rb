@@ -98,7 +98,6 @@ describe "DateRange" do
     it "returns true if date ranges match" do
       expect(@range1.overlaps?("08-01-2020", "08-05-2020")).must_equal true
     end
-  
   end
 end
 

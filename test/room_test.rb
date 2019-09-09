@@ -34,5 +34,4 @@ describe "Room class" do
       end
     end
   end
-
 end

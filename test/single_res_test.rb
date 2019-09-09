@@ -37,6 +37,4 @@ describe "SingleRes" do
       expect(reservation2.cost).must_be_close_to 2400.0, 0.01
     end
   end
-
-
 end

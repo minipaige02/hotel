@@ -3,8 +3,8 @@ require_relative 'test_helper'
 describe "BlockRes" do
   before do
     @booking_manager = Hotel::BookingManager.new(10)
-
   end
+  
   describe "initialize" do
     it "creates a block of reservations with a date range, group of rooms, and a discounted room rate" do
       date_range = Hotel::DateRange.new("07-17-2020", "07-24-2020")
