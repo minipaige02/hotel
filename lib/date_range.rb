@@ -33,6 +33,5 @@ module Hotel
 
       check_in <= (end_date - 1) && start_date <= (check_out - 1)
     end
-
   end
 end

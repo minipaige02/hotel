@@ -6,7 +6,7 @@ module Hotel
 
     def initialize(date_range)
       @date_range = date_range
-      #@id = 
+      #Id or guest_name might be good future attributes
     end
 
     def cost
