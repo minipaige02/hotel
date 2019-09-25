@@ -1,10 +1,10 @@
 module Hotel
   class Room
+    COST_PER_NIGHT = 200
     attr_reader :number, :cost_per_night
     
-    def initialize(number, cost_per_night = 200)
+    def initialize(number)
         @number = number
-        @cost_per_night = cost_per_night
     end
 
     def self.all_rooms(total_rooms)
@@ -15,6 +15,10 @@ module Hotel
       end
 
       return rooms
+    end
+
+    def cost
+      return COST_PER_NIGHT
     end
   end
 end

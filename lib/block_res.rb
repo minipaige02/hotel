@@ -20,7 +20,7 @@ module Hotel
       if !rooms.include?(room)
         raise ArgumentError.new("Invalid room entered.")
       end
-      return (date_range.total_nights * room.cost_per_night).to_f * (1 - discount)
+      return (date_range.total_nights * room.cost).to_f * (1 - discount)
     end
   end
 end
