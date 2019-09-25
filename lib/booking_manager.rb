@@ -7,8 +7,8 @@ module Hotel
   class BookingManager
     attr_reader :rooms, :reservations, :blocks
     
-    def initialize(total_room_count)
-      @rooms = Hotel::Room.all_rooms(total_room_count)
+    def initialize(total_rooms)
+      @rooms = Hotel::Room.all_rooms(total_rooms)
       @reservations = []
       @blocks = []
     end
