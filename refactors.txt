@@ -9,3 +9,4 @@ Refactors for next time:
   -Should room be a class? Does it need to know its cost??
   -More edge cases should be tested.
   -Names as a whole are very long. Find ways to shorten these while still making them easy to understand!
+  -Use a .self method to create instances of block (see ada/week_6/api-wrapper-class.rb)
