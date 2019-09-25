@@ -39,28 +39,16 @@ module Hotel
       end 
     end
 
-
-    # Calls upon reservation's instance varaiables date_range and room
-    # also needs to know if it's a single or block reservation
-    # Dee's suggestion => all_reserved = reserved_single + reserved_blocks.flatten!.to_a
     def rooms_available(start_date, end_date)
       reserved_single = reservations.select do |reservation|
-        reservation.date_range.overlaps?(start_date, end_date)
+        reservation.overlaps?(start_date, end_date)
       end.map! {|reservation| reservation.room}
 
       reserved_blocks = blocks.select do |block|
-        block.date_range.overlaps?(start_date, end_date)
+        block.overlaps?(start_date, end_date)
       end.map! {|block| block.unreserved_rooms}
 
-      if reserved_single.length > 0 && reserved_blocks.length > 0
-        all_reserved = reserved_single + reserved_blocks.flatten!
-      elsif reserved_single.length > 0 && reserved_blocks.length == 0
-        all_reserved = reserved_single
-      elsif reserved_single.length == 0 && reserved_blocks.length > 0
-        all_reserved = reserved_blocks.flatten!
-      else
-        all_reserved = []
-      end
+      all_reserved = reserved_single + reserved_blocks.flatten!.to_a
       
       available_rooms = rooms - all_reserved
 

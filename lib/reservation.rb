@@ -15,5 +15,9 @@ module Hotel
     def date_included?(date)
       return @date_range.date_included?(date)
     end
+
+    def overlaps?(start_date, end_date)
+      return @date_range.overlaps?(start_date, end_date)
+    end
   end
 end
