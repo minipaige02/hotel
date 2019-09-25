@@ -331,7 +331,8 @@ describe "BookingManager" do
       expect(@block_res.unreserved_rooms.length).must_equal 2
       expect(@block_res.rooms.length).must_equal 3
       expect(unreserved_room_nums).wont_include 1
-      expect(unreserved_room_nums).must_include 2 && 3
+      expect(unreserved_room_nums).must_include 2 
+      expect(unreserved_room_nums).must_include 3
     end
 
     it "raises an exception if no rooms are available from the block" do
