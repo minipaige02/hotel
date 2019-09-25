@@ -101,12 +101,11 @@ module Hotel
       return nil
     end
 
-    # move to block?
     def book_block_res(group_name)
       block = find_block(group_name)
 
       if block.rooms_available?
-        block.unreserved_rooms.delete_at(0)
+        block.reserve_room
       else
         raise ArgumentError.new("No rooms availalbe.")
       end

@@ -21,5 +21,9 @@ module Hotel
       end
       return (date_range.total_nights * room.cost).to_f * (1 - discount)
     end
+
+    def reserve_room
+      @unreserved_rooms.delete_at(0)
+    end
   end
 end
