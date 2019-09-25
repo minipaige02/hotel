@@ -11,5 +11,9 @@ module Hotel
     def cost
       raise NotImplementedError
     end
+
+    def date_included?(date)
+      return @date_range.date_included?(date)
+    end
   end
 end

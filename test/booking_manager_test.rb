@@ -64,8 +64,8 @@ describe "BookingManager" do
     end
     
     it "returns an array of reservations for a specific date" do
-      test_search = @booking_manager2.find_reservations_by_date("05-24-2020")
-      test_search2 = @booking_manager2.find_reservations_by_date("05-23-2020")
+      test_search = @booking_manager2.list_reservations("05-24-2020")
+      test_search2 = @booking_manager2.list_reservations("05-23-2020")
 
       expect(test_search).must_be_kind_of Array
       expect(test_search.length).must_equal 2
@@ -76,7 +76,7 @@ describe "BookingManager" do
     end
     
     it "returns an array of accurate reservations for a specific date" do
-      test_search = @booking_manager2.find_reservations_by_date("05-24-2020")
+      test_search = @booking_manager2.list_reservations("05-24-2020")
 
       expect(test_search[0].room.number).must_equal 1
       expect(test_search[0].date_range.check_out.strftime("%m-%d-%Y")).must_equal "05-25-2020"
@@ -85,9 +85,9 @@ describe "BookingManager" do
     end
 
     it "returns nil if no reservations are found" do
-      expect(@booking_manager2.find_reservations_by_date("05-22-2020")).must_be_nil
-      expect(@booking_manager2.find_reservations_by_date("06-22-2020")).must_be_nil
-      expect(@booking_manager2.find_reservations_by_date("05-27-2020")).must_be_nil
+      expect(@booking_manager2.list_reservations("05-22-2020")).must_be_nil
+      expect(@booking_manager2.list_reservations("06-22-2020")).must_be_nil
+      expect(@booking_manager2.list_reservations("05-27-2020")).must_be_nil
     end
 
     it "returns both single reservations and blocks" do
@@ -99,7 +99,7 @@ describe "BookingManager" do
       )
       @booking_manager2.blocks << block_res
 
-      found_reservations = @booking_manager2.find_reservations_by_date("05-24-2020")
+      found_reservations = @booking_manager2.list_reservations("05-24-2020")
 
       expect(found_reservations.length).must_equal 3
       expect(found_reservations[2]).must_be_instance_of Hotel::BlockRes

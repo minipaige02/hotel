@@ -21,14 +21,13 @@ module Hotel
       return room_list
     end
 
-    # calls on reservation's date_range variable
-    def find_reservations_by_date(date)
+    def list_reservations(date)
       found_singles = reservations.select do |reservation|
-        reservation.date_range.date_included?(date)
+        reservation.date_included?(date)
       end
 
       found_blocks = blocks.select do |block|
-        block.date_range.date_included?(date)
+        block.date_included?(date)
       end
 
       found_reservations = found_singles + found_blocks
@@ -43,6 +42,7 @@ module Hotel
 
     # Calls upon reservation's instance varaiables date_range and room
     # also needs to know if it's a single or block reservation
+    # Dee's suggestion => all_reserved = reserved_single + reserved_blocks.flatten!.to_a
     def rooms_available(start_date, end_date)
       reserved_single = reservations.select do |reservation|
         reservation.date_range.overlaps?(start_date, end_date)
@@ -67,6 +67,8 @@ module Hotel
       return available_rooms
     end
 
+    # Dee: Hm, I'm not sure what this method does besides take the first X rooms 
+    # from available_rooms? Also, I think it's not explicitly tested ;P (Not high priority feedback)
     def find_rooms(available_rooms, total_rooms = 1)
       if total_rooms == 1
         return available_rooms[0]
@@ -92,7 +94,7 @@ module Hotel
       end
     end
 
-    # move to block
+    # move to block?
     def create_block(check_in:, check_out:, total_rooms:, group_name:, discount:)
       if total_rooms > 5
         raise ArgumentError.new("Total rooms in block cannot exceed 5 rooms.")
@@ -118,7 +120,7 @@ module Hotel
       return nil
     end
 
-    # move to block
+    # move to block?
     def book_block_res(group_name)
       block = find_block(group_name)
 

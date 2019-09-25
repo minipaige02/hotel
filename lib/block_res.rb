@@ -15,7 +15,6 @@ module Hotel
       unreserved_rooms.length > 0 ? true : false
     end
 
-    # should call upon method room.cost not instance variable
     def cost(room)
       if !rooms.include?(room)
         raise ArgumentError.new("Invalid room entered.")
