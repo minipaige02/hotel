@@ -9,6 +9,7 @@ module Hotel
       @room = room
     end
 
+    # Room should have a cost method. This calls on room's instance variable
     def cost
       (date_range.total_nights * room.cost_per_night).to_f
     end

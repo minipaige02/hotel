@@ -36,3 +36,7 @@ Implementation B adheres much better to the single responsibility principle beca
 
 * Bonus question once you've read Metz ch. 3: Which implementation is more loosely coupled?
 Implementation B is also more loosely coupled because none of the classes know any information about the instance variables of the other classes. All Order knows in Implementation B is that it holds and instance of ShoppingCart and it has a method named price and all ShoppingCart knows is that it holds something that responds to the method price. In Implementation A, Order knows that it holds instances of ShoppingCart, that ShoppingCart has an instance variable entries and that it holds something that has the instance variables unit_price and quantity. Way more information than it needs to know!
+
+
+ACTIVITY
+The main place in Hotel where I have a class taking on multiple roles is in BookingManager. It knows a few of my other class' instance_variables. I think adding more methods to my other classes that BookingManager could then call would help a lot instead of having everything happening in BookingManager. This would result in better single responsibility and having more loosely coupled classes. 

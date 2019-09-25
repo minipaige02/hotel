@@ -1,12 +1,14 @@
 Refactors for next time:
-  -Figure out a better way to "book" a room for a block. Define what that means.
-  -Determine clearer relationship btw reservation, singleres, and blockres
+  *-Figure out a better way to "book" a room for a block. Define what that means.
+    --get rid of inheritance???
+  *-Determine clearer relationship btw reservation, singleres, and blockres
   -Reservation class could take on an id or guest attribute going forward. This might make more sense to help find reservations as well.
   -Clean up methods so they aren't so long - add more helper methods where possible
     *See find_reservations_by_date[] - way so that you don't have to loop through two different arrays?
     *See rooms_available[]
     *See create_block[]
   -Should room be a class? Does it need to know its cost??
+    --add cost method so other classes don't need to know it has a cost_per_night variable
   -More edge cases should be tested.
   -Names as a whole are very long. Find ways to shorten these while still making them easy to understand!
   -Use a .self method to create instances of block (see ada/week_6/api-wrapper-class.rb)
