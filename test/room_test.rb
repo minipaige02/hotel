@@ -35,6 +35,5 @@ describe "Room class" do
     it "returns the cost of a room for one night" do
       expect(@room.cost).must_equal 200
     end
-
   end
 end

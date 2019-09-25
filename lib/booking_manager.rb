@@ -13,10 +13,9 @@ module Hotel
       @blocks = []
     end
     
-    # Calls on room's instance variable number
-    def list_all_rooms
+    def list_rooms
       room_list = @rooms.map do |room|
-        "Room #{room.number}"
+        "Room #{room.details}"
       end.join("\n")
       
       return room_list

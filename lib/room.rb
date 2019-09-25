@@ -20,5 +20,9 @@ module Hotel
     def cost
       return COST_PER_NIGHT
     end
+
+    def details
+      return number
+    end
   end
 end
