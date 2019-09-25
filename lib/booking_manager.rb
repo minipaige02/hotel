@@ -55,21 +55,6 @@ module Hotel
       return available_rooms
     end
 
-    # Dee: Hm, I'm not sure what this method does besides take the first X rooms 
-    # from available_rooms? Also, I think it's not explicitly tested ;P (Not high priority feedback)
-    def find_rooms(available_rooms, total_rooms = 1)
-      if total_rooms == 1
-        return available_rooms[0]
-      else
-        rooms_array = []
-        total_rooms.times do
-          rooms_array << available_rooms.shift
-        end
-        return rooms_array
-      end
-    end
-
-    # move to single_res
     def book_single_res(check_in, check_out)
       available_rooms = rooms_available(check_in, check_out)
       dates = Hotel::DateRange.new(check_in, check_out)
@@ -77,28 +62,36 @@ module Hotel
       if available_rooms.length == 0
         raise ArgumentError.new("No available rooms for #{check_in} - #{check_out}")
       else
-        room = find_rooms(available_rooms)
+        room = available_rooms[0]
         reservations << Hotel::SingleRes.new(dates, room)
       end
     end
-
-    # move to block?
+    
     def create_block(check_in:, check_out:, total_rooms:, group_name:, discount:)
       if total_rooms > 5
         raise ArgumentError.new("Total rooms in block cannot exceed 5 rooms.")
       end
-
+      
       available_rooms = rooms_available(check_in, check_out)
       dates = Hotel::DateRange.new(check_in, check_out)
-
+      
       if available_rooms.length < total_rooms
         raise ArgumentError.new("Insufficient rooms available for #{check_in} - #{check_out}.")
       else
-        rooms = find_rooms(available_rooms, total_rooms)
-        blocks << Hotel::BlockRes.new(date_range: dates, rooms: rooms, discount: discount, group_name: group_name)
+        rooms = []
+        total_rooms.times do
+          rooms << available_rooms.shift
+        end
+
+        blocks << Hotel::BlockRes.new(
+          date_range: dates, 
+          rooms: rooms, 
+          discount: discount, 
+          group_name: group_name
+        )
       end
     end
-
+    
     def find_block(group_name)
       blocks.each do |block|
         if block.group_name == group_name
